@@ -5,7 +5,7 @@ const Project = require("../../src/models/Project");
 describe('Insert project', () => {
 
   beforeAll(async () => {
-    await mongoose.connect(`${process.env.MONGO_URL_TEST}`, {
+    await mongoose.connect(`${process.env.MONGO_URL}`, {
       dbName: "test",
       useNewUrlParser: true,
       useUnifiedTopology: true,

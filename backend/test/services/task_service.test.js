@@ -5,7 +5,7 @@ const Task = require("../../src/models/Tasks");
 describe('Insert task', () => {
 
   beforeAll(async () => {
-    await mongoose.connect(`${process.env.MONGO_URL_TEST}`, {
+    await mongoose.connect(`${process.env.MONGO_URL}`, {
       dbName: "test",
       useNewUrlParser: true,
       useUnifiedTopology: true,

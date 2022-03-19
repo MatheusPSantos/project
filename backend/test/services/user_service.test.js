@@ -6,7 +6,7 @@ const User = require("../../src/models/User");
 describe('Insert user', () => {
 
   beforeAll(async () => {
-    await mongoose.connect(`${process.env.MONGO_URL_TEST}`, {
+    await mongoose.connect(`${process.env.MONGO_URL}`, {
       dbName: "test",
       useNewUrlParser: true,
       useUnifiedTopology: true,
