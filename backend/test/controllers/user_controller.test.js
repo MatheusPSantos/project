@@ -8,6 +8,7 @@ test("User should have correct structure.", async () => {
   let user = {
     _id: "someId",
     username: "someuser",
+    email: "some@email.com",
     password: "somepassword",
     projects: [
       "someProjectId",
@@ -17,34 +18,8 @@ test("User should have correct structure.", async () => {
 
   expect(user).toHaveProperty("_id");
   expect(user).toHaveProperty("username");
+  expect(user).toHaveProperty("email");
   expect(user).toHaveProperty("password");
   expect(user).toHaveProperty("projects");
 
-});
-
-test("Project should have correct structure.", async () => {
-  let Project = {
-    _id: "someId",
-    user_id: "someUserId",
-    tasks: [
-      "sometaskId",
-      "othertaskId"
-    ]
-  };
-
-  expect(Project).toHaveProperty("_id");
-  expect(Project).toHaveProperty("user_id");
-  expect(Project).toHaveProperty("tasks");
-});
-
-test("Task should have correct structure.", async () => {
-  let task = {
-    description: "some description",
-    createdAt: new Date(),
-    finishedAt: new Date()
-  };
-
-  expect(task).toHaveProperty("description");
-  expect(task).toHaveProperty("createdAt");
-  expect(task).toHaveProperty("finishedAt");
 });
