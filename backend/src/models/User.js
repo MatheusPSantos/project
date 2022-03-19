@@ -6,7 +6,7 @@ const userSchema = new Schema(
     username: { type: String, unique: true },
     email: { type: String, unique: true },
     password: String,
-    projects: Array
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }]
   },
   {
     timestamps: true,
