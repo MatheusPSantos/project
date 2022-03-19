@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const crypto = require("crypto");
-const Project = require("../../src/models/Project");
+const User = require("../../src/models/User");
 
 describe('Insert user', () => {
 
@@ -14,7 +14,7 @@ describe('Insert user', () => {
   });
 
   afterAll(async () => {
-    await Project.deleteMany();
+    await User.deleteMany();
   });
 
   it('should insert a user into collection', async () => {

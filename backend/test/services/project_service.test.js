@@ -1,11 +1,8 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const crypto = require("crypto");
 const Project = require("../../src/models/Project");
 
 describe('Insert project', () => {
-
-  beforeAll(() => jest.setTimeout(10 * 1000))
 
   beforeAll(async () => {
     await mongoose.connect(`${process.env.MONGO_URL_TEST}`, {
