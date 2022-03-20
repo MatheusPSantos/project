@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const projectSchema = new Schema(
   {
-    name: String,
+    name: { type: String, unique: true },
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }]
   },
   {

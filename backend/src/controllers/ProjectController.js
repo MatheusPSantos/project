@@ -26,7 +26,17 @@ async function listProjects() {
   }
 }
 
+async function deleteProject({ name }) {
+  try {
+    return await Project.findOneAndDelete({ name: name }).lean();
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   createProject,
-  listProjects
+  listProjects,
+  deleteProject
 };

@@ -3,8 +3,9 @@ const router = express.Router();
 const Validator = require("validatorjs");
 
 const { login, signup, update } = require("./controllers/UserController");
-const { createProject, listProjects } = require("./controllers/ProjectController");
-const { HandleValidationFails } = require("./utils/validation");
+const { createProject, listProjects, deleteProject } = require("./controllers/ProjectController");
+const { HandleValidationFails } = require("./utils");
+
 
 router.get("/user", async (req, res) => {
   try {
@@ -97,7 +98,10 @@ router.delete("/project/:name", async (req, res) => {
 
     HandleValidationFails(validation);
 
-    res.status(200).json({ success: true, data: req.params });
+    let projectDeleted = await deleteProject(req.params);
+
+    if (projectDeleted) res.status(200).json({ success: true, data: projectDeleted });
+    else res.status(404).json({ success: false, message: "Can not find project to delete." });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -108,6 +112,9 @@ router.post("/task", (req, res) => {
     const validation = new Validator(req.body, {
 
     });
+
+    HandleValidationFails(validation);
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -118,6 +125,10 @@ router.get("/task", (req, res) => {
     const validation = new Validator(req.query, {
 
     });
+
+    HandleValidationFails(validation);
+
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
