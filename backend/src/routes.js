@@ -91,10 +91,10 @@ router.get("/project", async (req, res) => {
   }
 });
 
-router.delete("/project/:name", async (req, res) => {
+router.delete("/project/:id", async (req, res) => {
   try {
     const validation = new Validator(req.params, {
-      name: "string|required|min:3"
+      id: "string|required|min:10"
     });
 
     HandleValidationFails(validation);

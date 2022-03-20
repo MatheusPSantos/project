@@ -55,7 +55,7 @@ export default function Tasks({ project_id }) {
     {
       listTask.length > 0 ?
         listTask?.map((task, index) => (
-          <ListItem key={index} task={task} done={task.status} />
+          <ListItem key={index} task={task} done={task.status} deleteTask={deleteTask} />
         ))
         : <></>
     }
@@ -63,7 +63,7 @@ export default function Tasks({ project_id }) {
 }
 
 
-function ListItem({ task, done }) {
+function ListItem({ task, done, deleteTask }) {
   return <li style={{ listStyle: "none", margin: "10px 0" }}
     className={`list-group-item`}
   >
@@ -73,7 +73,6 @@ function ListItem({ task, done }) {
         data-tip={`
      description: ${task.description}
    `}>
-        {console.log(done)}
         <Link href={"/" + task._id}>
           <a className={`text-dark ${done && done === "done" ? "text-decoration-line-through " : ""}`}>
             {task.name}

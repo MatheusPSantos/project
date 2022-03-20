@@ -17,7 +17,6 @@ export default function Login() {
   async function handleSubmit(event) {
     try {
       event.preventDefault();
-      console.log(loginEmail, loginPassword);
 
       const { data } = await api.get("/user", {
         params: {

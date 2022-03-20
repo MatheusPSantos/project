@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
 import Tasks from "../components/list-task";
+import Project from "../components/project";
 import api from "../providers/api";
 import { userIsLogged } from "../utils/auth";
 
@@ -80,14 +81,7 @@ export default function Dashboard() {
       <h3>My Projects</h3>
       <div className="col">
         {listProject?.map((project, index) => (
-          <div style={{ margin: "50px auto" }} className="card" key={index}>
-            <div className="col">
-              <div className="card-body">
-                <h5>{project?.name || ""}</h5>
-                <Tasks project_id={project._id} />
-              </div>
-            </div>
-          </div>
+          <Project project={project} key={index} getProjects={getProjects} />
         ))}
       </div>
     </div>

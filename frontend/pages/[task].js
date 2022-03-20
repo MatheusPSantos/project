@@ -5,7 +5,7 @@ import api from "../providers/api";
 
 export default function Task() {
   const router = useRouter()
-  const { task } = router.query
+  const { task, project } = router.query
 
   const [taskID, setTaskID] = useState(task);
   const [taskObj, setTaskObj] = useState();
@@ -18,6 +18,7 @@ export default function Task() {
   useEffect(() => setTaskID(task), [task]);
 
   useEffect(async () => {
+    if (project) return;
     setTimeout(async () => {
       await getTask(taskID);
     }, 2000);
@@ -39,6 +40,29 @@ export default function Task() {
     }
 
 
+  }
+
+  async function createTask() {
+    try {
+      const { data } = await api.post("/task", {
+        project: project,
+        name: taskName,
+        description: taskDescription,
+        status: taskStatus
+      });
+
+      if (data.success) {
+        setTaskObj(data.data);
+        alert("Task created.");
+        router.push("/dashboard");
+      }
+
+      else {
+        alert("Something went wrong when try to create task. Please, try again later.");
+      }
+    } catch (error) {
+      alert("Erro while trynig update task.");
+    }
   }
 
   async function updateTask() {
@@ -94,14 +118,26 @@ export default function Task() {
             </div>
           </div>
           <div className='row'>
-            <button
-              title="update task"
-              style={{ fontSize: "10px", margin: "20px 10%" }}
-              onClick={updateTask}
-              className="col-2 btn btn-primary"
-            >
-              Update
-            </button>
+            {
+              project ?
+                <button
+                  title="update task"
+                  style={{ fontSize: "10px", margin: "20px 10%" }}
+                  onClick={createTask}
+                  className="col-2 btn btn-primary"
+                >
+                  Create Task
+                </button>
+                :
+                <button
+                  title="update task"
+                  style={{ fontSize: "10px", margin: "20px 10%" }}
+                  onClick={updateTask}
+                  className="col-2 btn btn-primary"
+                >
+                  Update
+                </button>
+            }
             <Link href="/dashboard">
               <a
                 style={{ fontSize: "10px", margin: "20px 10%" }}

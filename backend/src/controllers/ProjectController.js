@@ -26,9 +26,10 @@ async function listProjects() {
   }
 }
 
-async function deleteProject({ name }) {
+async function deleteProject({ id }) {
   try {
-    return await Project.findOneAndDelete({ name: name }).lean();
+    let deletedProject = await Project.findByIdAndRemove(id).lean();
+    return deletedProject;
   } catch (error) {
     console.error(error);
     throw new Error(error);
