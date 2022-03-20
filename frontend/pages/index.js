@@ -1,35 +1,26 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Login from './login'
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { userIsLogged } from '../utils/auth';
 
 export default function Home() {
-  const LOGO_URL = "https://www.datocms-assets.com/24091/1620295990-bolttech-logo-footer.svg";
+  const router = useRouter();
+
+  useEffect(async () => {
+    if (await userIsLogged()) {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <>
       <Head>
         <title>To do List</title>
         <meta name="description" content="An to do list application" />
-        <link rel="icon" href={LOGO_URL} />
+        <link rel="icon" href="https://www.datocms-assets.com/24091/1620295990-bolttech-logo-footer.svg" />
       </Head>
-      <header className={styles.header}>
-        <p>To do list</p>
-      </header>
-      <div className="container">
-        <Login />
-      </div>
-      <footer className={styles.footer}>
-        <a
-          href="https://bolttech.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <img src={LOGO_URL} alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </>
   )
 }
