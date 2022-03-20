@@ -1,8 +1,9 @@
 const express = require("express");
-const { route } = require("express/lib/application");
 const router = express.Router();
 const Validator = require("validatorjs");
-const { login, signup } = require("./controllers/UserController");
+
+const { login, signup, update } = require("./controllers/UserController");
+const { createProject, listProjects } = require("./controllers/ProjectController");
 
 router.get("/user", async (req, res) => {
   try {
@@ -16,7 +17,7 @@ router.get("/user", async (req, res) => {
       throw new Error(errors[Object.keys(errors)[0]]);
     }
 
-    let user = await login(req.query.email, req.query.password);
+    let user = await login(req.query);
 
     res.status(200).json({ success: true, data: user });
 
@@ -39,12 +40,7 @@ router.post("/user", async (req, res) => {
       throw new Error(errors[Object.keys(errors)[0]]);
     }
 
-    let user = await signup(
-      req.body.email,
-      req.body.password,
-      req.body.username,
-      req.body.projects
-    );
+    let user = await signup(req.body);
 
     res.status(200).json({ success: true, data: user });
 
@@ -53,14 +49,69 @@ router.post("/user", async (req, res) => {
   }
 });
 
-router.put("/user", (req, res, next) => { });
+router.put("/user", async (req, res) => {
+  try {
+    const validation = new Validator(req.body, {
+      email: "string|min:3",
+      password: "string|min:3",
+      username: "string|min:3",
+      projects: "array"
+    });
 
-router.post("/project", (req, res, next) => { });
+    if (validation.fails()) {
+      const errors = validation.errors.all();
+      throw new Error(errors[Object.keys(errors)[0]]);
+    }
 
-router.get("/project", (req, res, next) => { });
+    let user = await update(req.body);
 
-router.post("/task", (req, res, next) => { });
+    res.status(200).json({ success: true, data: user });
 
-router.get("/task", (req, res, next) => { });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.post("/project", async (req, res) => {
+  try {
+    const validation = new Validator(req.body, {
+      name: "required|string|min:3",
+      tasks: "array"
+    });
+    let project = await createProject(req.body);
+    res.status(200).json({ success: true, data: project });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/project", async (req, res) => {
+  try {
+    const projects = await listProjects();
+    res.status(200).json({ success: true, data: projects });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.post("/task", (req, res) => {
+  try {
+    const validation = new Validator(req.body, {
+
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/task", (req, res) => {
+  try {
+    const validation = new Validator(req.query, {
+
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 
 module.exports = router;

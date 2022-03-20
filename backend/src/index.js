@@ -10,7 +10,7 @@ app.use(cors("*"));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URL, {
-  dbName: "prod-db",
+  dbName: process.env.NODE_ENV !== "PROD" ? "dev-db" : "prod-db",
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

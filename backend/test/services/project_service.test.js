@@ -20,6 +20,7 @@ describe('Insert project', () => {
   it('should insert a project into collection', async () => {
 
     const projectMock = {
+      name: "some name",
       tasks: []
     };
 
@@ -30,6 +31,7 @@ describe('Insert project', () => {
 
     if (insertedProject) {
       expect(insertedProject).toHaveProperty("id");
+      expect(insertedProject).toHaveProperty("name");
       expect(insertedProject).toHaveProperty("tasks");
     } else {
       expect(insertedProject).toBe(null);
