@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { decrypt, encrypt } = require("../utils");
 
-async function login(email, password) {
+async function login({ email, password }) {
   try {
     const user = await User.findOne({ email: email });
 
@@ -19,9 +19,9 @@ async function login(email, password) {
     console.error(error);
     throw new Error(error);
   }
-};
+}
 
-async function signup(email, password, username, projects) {
+async function signup({ email, password, username, projects }) {
   try {
     const existsUser = await User.findOne({ email }).lean();
     if (existsUser) {
@@ -36,7 +36,6 @@ async function signup(email, password, username, projects) {
 
     let userCreated = await newUser.save();
 
-    console.log(userCreated);
     return userCreated;
 
   } catch (error) {
@@ -45,7 +44,34 @@ async function signup(email, password, username, projects) {
   }
 }
 
+async function update(updated) {
+  try {
+    let existsUser = await User.findOne({ email: updated.email }).lean();
+    if (existsUser) {
+      existsUser = { ...existsUser, updated };
+      return await User.findOneAndUpdate({
+        email: updated.email
+      },
+        {
+          username: updated.email,
+          password: await encrypt(updated.password),
+          email: updated.email,
+          projects: updated.projects
+        },
+        {
+          new: true
+        }
+      ).lean();
+    }
+    throw new Error("User does not exist");
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   login,
-  signup
+  signup,
+  update
 };
