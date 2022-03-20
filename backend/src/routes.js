@@ -4,6 +4,7 @@ const Validator = require("validatorjs");
 
 const { login, signup, update } = require("./controllers/UserController");
 const { createProject, listProjects } = require("./controllers/ProjectController");
+const { HandleValidationFails } = require("./utils/validation");
 
 router.get("/user", async (req, res) => {
   try {
@@ -12,10 +13,7 @@ router.get("/user", async (req, res) => {
       password: "required|string|min:3"
     });
 
-    if (validation.fails()) {
-      const errors = validation.errors.all();
-      throw new Error(errors[Object.keys(errors)[0]]);
-    }
+    HandleValidationFails(validation);
 
     let user = await login(req.query);
 
@@ -35,10 +33,7 @@ router.post("/user", async (req, res) => {
       projects: "array"
     });
 
-    if (validation.fails()) {
-      const errors = validation.errors.all();
-      throw new Error(errors[Object.keys(errors)[0]]);
-    }
+    HandleValidationFails(validation);
 
     let user = await signup(req.body);
 
@@ -58,10 +53,7 @@ router.put("/user", async (req, res) => {
       projects: "array"
     });
 
-    if (validation.fails()) {
-      const errors = validation.errors.all();
-      throw new Error(errors[Object.keys(errors)[0]]);
-    }
+    HandleValidationFails(validation);
 
     let user = await update(req.body);
 
@@ -78,6 +70,9 @@ router.post("/project", async (req, res) => {
       name: "required|string|min:3",
       tasks: "array"
     });
+
+    HandleValidationFails(validation);
+
     let project = await createProject(req.body);
     res.status(200).json({ success: true, data: project });
   } catch (error) {
@@ -89,6 +84,20 @@ router.get("/project", async (req, res) => {
   try {
     const projects = await listProjects();
     res.status(200).json({ success: true, data: projects });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.delete("/project/:name", async (req, res) => {
+  try {
+    const validation = new Validator(req.params, {
+      name: "string|required|min:3"
+    });
+
+    HandleValidationFails(validation);
+
+    res.status(200).json({ success: true, data: req.params });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
