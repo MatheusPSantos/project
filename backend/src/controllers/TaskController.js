@@ -2,19 +2,36 @@ const Project = require("../models/Project");
 const Task = require("../models/Tasks");
 
 async function createTask({
+  project,
   name,
   description,
   status,
   finishedAt
 }) {
   try {
-    let newTask = new Task();
-    newTask.name = name;
-    newTask.description = description;
-    newTask.status = status;
-    newTask.finishedAt = finishedAt;
+    return Project.find({ _id: project })
+      .then(async results => {
+        if (results.legth === 0) throw new Error("The project does not exists.");
 
-    return await newTask.save();
+        let project = results[0];
+
+        let newTask = new Task();
+        newTask.name = name;
+        newTask.description = description ? description : null;
+        newTask.status = status ? status : "todo";
+        newTask.finishedAt = finishedAt ? finishedAt : null;
+
+        project.tasks.push(newTask);
+
+        return newTask
+          .save()
+          .then(
+            project
+              .save()
+              .catch(error => new Error(error))
+          )
+          .catch(error => new Error(error));
+      });
 
   } catch (error) {
     console.error(error);
@@ -22,14 +39,23 @@ async function createTask({
   }
 }
 
-async function listTasks({ projectName }) {
+async function listTasks({ project }) {
   try {
     return await Project
-      .findOne({ name: projectName })
+      .findById({ _id: project })
       .populate({
         path: "tasks"
       })
       .lean();
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
+
+async function updateTask({ name, description, status, finishedAt }) {
+  try {
+
   } catch (error) {
     console.error(error);
     throw new Error(error);
@@ -48,5 +74,6 @@ async function deleteTask({ id }) {
 module.exports = {
   createTask,
   deleteTask,
-  listTasks,
+  updateTask,
+  listTasks
 };
