@@ -15,7 +15,7 @@ export default function Tasks({ project_id }) {
   }, []);
 
   async function getTasks() {
-    const { data } = await api.get("/task/" + project_id);
+    const { data } = await api.get("/tasks/" + project_id);
 
     if (data.success) {
       setListTask(data.data.tasks);
@@ -55,41 +55,40 @@ export default function Tasks({ project_id }) {
     {
       listTask.length > 0 ?
         listTask?.map((task, index) => (
-          <li
-            key={index}
-            style={{ listStyle: "none", margin: "10px 0" }}
-
-            className="list-group-item"
-          >
-            <div className="row justify-content-between">
-
-              <div
-                className="col-5"
-                data-tip={`
-               description: ${task.description}
-             `}>
-
-                <Link
-                  href={"/" + task._id}
-                >
-                  <a className="badge rounded-pill bg-light text-dark">
-                    {task.name}
-                  </a>
-                </Link>
-                <ReactTooltip />
-              </div>
-              <div className="col-5">
-                <button
-                  title="Delete task"
-                  style={{ fontSize: "10px", margin: "0 5px" }} onClick={(e) => deleteTask(e, task)} className="btn btn-danger"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            </div>
-          </li>
+          <ListItem key={index} task={task} done={task.status} />
         ))
         : <></>
     }
   </ul>
+}
+
+
+function ListItem({ task, done }) {
+  return <li style={{ listStyle: "none", margin: "10px 0" }}
+    className={`list-group-item`}
+  >
+    <div className="row justify-content-between ">
+      <div
+        className="col-5"
+        data-tip={`
+     description: ${task.description}
+   `}>
+        {console.log(done)}
+        <Link href={"/" + task._id}>
+          <a className={`text-dark ${done && done === "done" ? "text-decoration-line-through " : ""}`}>
+            {task.name}
+          </a>
+        </Link>
+        <ReactTooltip />
+      </div>
+      <div className="col-5">
+        <button
+          title="Delete task"
+          style={{ fontSize: "10px", margin: "0 5px" }} onClick={(e) => deleteTask(e, task)} className="btn btn-danger"
+        >
+          <FaTrash />
+        </button>
+      </div>
+    </div>
+  </li>
 }

@@ -54,9 +54,32 @@ async function listTasks({ project }) {
   }
 }
 
-async function updateTask({ name, description, status, finishedAt }) {
+async function getTask({ id }) {
   try {
+    return await Task.findById({ _id: id })
+      .lean();
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+}
 
+async function updateTask({ id, name, description, status }) {
+  try {
+    let updatedTask = await Task
+      .findByIdAndUpdate({
+        _id: id
+      }, {
+        name: name,
+        description: description,
+        status: status,
+        finishedAt: status === "done" ? new Date() : null
+      }, {
+        new: true
+      })
+      .lean();
+
+    return updatedTask;
   } catch (error) {
     console.error(error);
     throw new Error(error);
@@ -82,5 +105,6 @@ module.exports = {
   createTask,
   deleteTask,
   updateTask,
-  listTasks
+  listTasks,
+  getTask
 };
