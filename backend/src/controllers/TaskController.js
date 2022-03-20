@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Project = require("../models/Project");
 const Task = require("../models/Tasks");
 
@@ -64,6 +65,12 @@ async function updateTask({ name, description, status, finishedAt }) {
 
 async function deleteTask({ id }) {
   try {
+    let project = await Project.findOne({ tasks: { $in: id } }).lean()
+    let updatedTasks = project.tasks.filter(task => task.toString() !== (id));
+    await Project.findOneAndUpdate({ tasks: { $in: id } }, {
+      tasks: updatedTasks
+    });
+
     return await Task.findOneAndDelete(id);
   } catch (error) {
     console.error(error);
