@@ -12,13 +12,26 @@
   align-items: center;
 }
 
+.header {
+  width: 100%;
+  padding: 10px;
+  background-color: #170f4f;
+  color: white;
+  margin-bottom: 100px;
+}
+
 .footer {
   display: flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   flex: 1;
+  color: white;
   padding: 2rem 0;
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  background-color: #170f4f;
 }
 
 .footer a {
