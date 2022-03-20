@@ -5,6 +5,7 @@ const Validator = require("validatorjs");
 const { login, signup, update } = require("./controllers/UserController");
 const { createProject, listProjects, deleteProject } = require("./controllers/ProjectController");
 const { HandleValidationFails } = require("./utils");
+const { deleteTask, listTasks, createTask } = require("./controllers/TaskController");
 
 
 router.get("/user", async (req, res) => {
@@ -107,27 +108,53 @@ router.delete("/project/:name", async (req, res) => {
   }
 });
 
-router.post("/task", (req, res) => {
+router.post("/task", async (req, res) => {
   try {
     const validation = new Validator(req.body, {
-
+      name: "string|min:3",
+      description: "string|min:3",
+      status: "string|min:4|max:4",
+      finishedAt: "string|min:10"
     });
 
     HandleValidationFails(validation);
+
+    let newTask = await createTask(req.body);
+
+    res.status(200).json({ success: true, data: newTask });
 
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 });
 
-router.get("/task", (req, res) => {
+router.get("/task/:project", async (req, res) => {
   try {
-    const validation = new Validator(req.query, {
-
+    const validation = new Validator(req.params, {
+      project: "required|string|min:3"
     });
 
     HandleValidationFails(validation);
 
+    let tasks = await listTasks(req.params);
+    res.status(200).json({ success: true, data: tasks });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.delete("/task/:id", async (req, res) => {
+  try {
+    const validation = new Validator(req.params, {
+      id: "required|string|min:10"
+    });
+
+    HandleValidationFails(validation);
+
+    const deletedTask = await deleteTask(req.params);
+
+    if (deleteTask) res.status(200).json({ success: true, data: deletedTask });
+    else res.status(404).json({ success: false, message: "Can not find Task to delete." });
 
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

@@ -20,6 +20,7 @@ describe('Insert task', () => {
   it('should insert a task into collection', async () => {
 
     const taskMock = {
+      name: "some name",
       description: "some task",
       status: "done",
       finishedAt: new Date()
@@ -31,6 +32,7 @@ describe('Insert task', () => {
     const insertedTask = await Task.findOne();
 
     if (insertedTask) {
+      expect(insertedTask).toHaveProperty("name");
       expect(insertedTask).toHaveProperty("description");
       expect(insertedTask).toHaveProperty("status");
       expect(insertedTask).toHaveProperty("createdAt");

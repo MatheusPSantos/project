@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 const taskSchema = new Schema(
   {
+    name: String,
     description: String,
     status: String,
     finishedAt: Date
